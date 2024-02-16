@@ -1,0 +1,56 @@
+// ==UserScript==
+// @name         Nifty 52WH
+// @namespace    http://tampermonkey.net/
+// @version      2024-02-16
+// @description  try to take over the world!
+// @author       Arun Sudhilal
+// @match        https://www.nseindia.com/market-data/new-52-week-high-low-equity-market
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=nseindia.com
+// @grant        none
+// ==/UserScript==
+
+window.addEventListener('load', function() {
+    'use strict';
+    let btn = document.createElement("button")
+    btn.innerHTML = "Open ChartInk"
+    btn.onclick = () => {
+        openChartInk();
+        console.log("there")
+    }
+
+    let startCount = 0;
+
+    function openChartInk(){
+        let preTags = document.getElementsByClassName("symbol-word-break");
+        //let count = 0;
+        let p;
+        let count;
+        console.log(preTags.length);
+        for (count=startCount ; count <preTags.length; ){
+            p = preTags[count];
+            let name = p.href;
+            let nameArray = name.split("=");
+            console.log(nameArray[1])
+            openPage(nameArray[1]);
+
+            count++
+            if (count % 20 == 0) {
+                startCount = count;
+                break;
+            }
+        }
+    }
+
+    function openPage(stock) {
+        var text = "http://chartink.com/stocks/" + stock + ".html";
+        text = text.replace(/"/g,"");
+        text = text.replace(/ /g,"");
+        window.open(text);
+    }
+
+    console.log("loaded")
+    let t = document.getElementsByClassName("col-md-3");
+    t[0].insertBefore(document.createElement('br'), t.childNodes)
+    t[0].insertBefore(btn, t.childNodes)
+});
+//Reference : youtube.com/watch?v=U4dSWJFIQ0A
